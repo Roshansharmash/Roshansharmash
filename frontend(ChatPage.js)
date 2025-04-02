@@ -1,0 +1,28 @@
+import React, { useState } from 'react';
+
+const ChatPage = () => {
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
+
+  const sendMessage = () => {
+    if (newMessage.trim()) {
+      setMessages([...messages, newMessage]);
+      setNewMessage('');
+    }
+  };
+
+  return (
+    <div>
+      <h2>Chat with Doctor</h2>
+      <div>
+        {messages.map((msg, index) => (
+          <p key={index}>{msg}</p>
+        ))}
+      </div>
+      <input type="text" value={newMessage} onChange={(e) => setNewMessage(e.target.value)} />
+      <button onClick={sendMessage}>Send</button>
+    </div>
+  );
+};
+
+export default ChatPage;
