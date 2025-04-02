@@ -1,0 +1,14 @@
+import React from 'react';
+
+const DoctorDashboard = () => {
+  return (
+    <div className="doctor-container">
+      <h1>Welcome, Doctor</h1>
+      <button>View Appointments</button>
+      <button>Start Video Consultation</button>
+      <button>Chat with Patients</button>
+    </div>
+  );
+};
+
+export default DoctorDashboard;
