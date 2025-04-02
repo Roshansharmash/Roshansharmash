@@ -1,0 +1,45 @@
+import React, { useState } from 'react';
+
+const AppointmentsPage = () => {
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [doctor, setDoctor] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+
+  const doctorsList = ['Dr. Smith', 'Dr. Johnson', 'Dr. Lee', 'Dr. Patel'];
+
+  const bookAppointment = () => {
+    if (!date || !time || !doctor) {
+      alert('Please select a date, time, and doctor.');
+      return;
+    }
+    
+    setConfirmation(Appointment booked with ${doctor} on ${date} at ${time}.);
+  };
+
+  return (
+    <div>
+      <h2>Book an Appointment</h2>
+      
+      <label>Select Date:</label>
+      <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+      
+      <label>Select Time:</label>
+      <input type="time" value={time} onChange={(e) => setTime(e.target.value)} />
+      
+      <label>Select Doctor:</label>
+      <select value={doctor} onChange={(e) => setDoctor(e.target.value)}>
+        <option value="">Choose a Doctor</option>
+        {doctorsList.map((doc, index) => (
+          <option key={index} value={doc}>{doc}</option>
+        ))}
+      </select>
+      
+      <button onClick={bookAppointment}>Book Appointment</button>
+
+      {confirmation && <p style={{ color: 'green' }}>{confirmation}</p>}
+    </div>
+  );
+};
+
+export default AppointmentsPage;
