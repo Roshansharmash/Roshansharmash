@@ -1,0 +1,28 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import SignupPage from './pages/SignupPage';
+import LoginPage from './pages/LoginPage';
+import HomePage from './pages/HomePage';
+import AppointmentsPage from './pages/AppointmentsPage';
+import ChatPage from './pages/ChatPage';
+import VideoCallPage from './pages/VideoCallPage';
+import DoctorDashboard from './pages/DoctorDashboard'; // ✅ Import Doctor Dashboard
+
+const App = () => {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<SignupPage />} />
+        <Route path="/signup" element={<SignupPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/home" element={<HomePage />} />
+        <Route path="/appointments" element={<AppointmentsPage />} />
+        <Route path="/chat" element={<ChatPage />} />
+        <Route path="/video-call" element={<VideoCallPage />} />
+        <Route path="/doctor-dashboard" element={<DoctorDashboard />} /> {/* ✅ New Route */}
+      </Routes>
+    </Router>
+  );
+};
+
+export default App;
