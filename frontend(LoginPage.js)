@@ -1,0 +1,40 @@
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+
+
+const LoginPage = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/login', { email, password });
+
+      alert(response.data.message);
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
+
+      // ✅ Redirect based on user role
+      if (response.data.user.role === 'doctor') {
+        navigate('/doctor-dashboard'); // Redirect doctors to a different page
+      } else {
+        navigate('/home'); // Redirect patients to the home page
+      }
+    } catch (error) {
+      alert(error.response?.data?.message || 'Login failed');
+    }
+  };
+
+  return (
+    <div className="auth-container">
+      <h2>Login</h2>
+      <input type="email" className="auth-input" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+      <input type="password" className="auth-input" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+};
+
+export default LoginPage;
