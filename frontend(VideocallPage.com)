@@ -1,0 +1,52 @@
+import React, { useEffect, useRef } from 'react';
+import { useParams } from 'react-router-dom';
+import io from 'socket.io-client';
+
+const VideoCallPage = () => {
+  const { roomId } = useParams();
+  const socketRef = useRef();
+  const localVideoRef = useRef();
+  const remoteVideoRef = useRef();
+  const peerConnectionRef = useRef(null); // ✅ Using useRef to persist value
+
+  useEffect(() => {
+    socketRef.current = io.connect('http://localhost:5000');
+
+    navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+      .then((stream) => {
+        localVideoRef.current.srcObject = stream;
+        socketRef.current.emit('join-call', roomId);
+
+        peerConnectionRef.current = new RTCPeerConnection(); // ✅ Store in useRef
+        stream.getTracks().forEach(track => peerConnectionRef.current.addTrack(track, stream));
+
+        peerConnectionRef.current.ontrack = (event) => {
+          remoteVideoRef.current.srcObject = event.streams[0];
+        };
+
+        socketRef.current.on('offer', (offer) => {
+          peerConnectionRef.current.setRemoteDescription(new RTCSessionDescription(offer));
+          peerConnectionRef.current.createAnswer().then((answer) => {
+            peerConnectionRef.current.setLocalDescription(answer);
+            socketRef.current.emit('answer', { answer, roomId });
+          });
+        });
+      });
+
+    return () => {
+      if (peerConnectionRef.current) {
+        peerConnectionRef.current.close();
+      }
+      socketRef.current.disconnect();
+    };
+  }, [roomId]); // ✅ Only runs when roomId changes
+
+  return (
+    <div>
+      <video ref={localVideoRef} autoPlay muted />
+      <video ref={remoteVideoRef} autoPlay />
+    </div>
+  );
+};
+
+export default VideoCallPage;
